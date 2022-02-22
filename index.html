@@ -1,0 +1,142 @@
+<!DOCTYPE>
+<html>
+<head>
+	<title>Калькулятор понижения проб</title>
+	<meta charset="utf-8">
+	<style>
+		body {
+		  display: flex;
+		  justify-content: center;
+		  align-items: center;
+		  margin: 0;
+		}
+		#wrapper{
+			margin-top: 3em;
+		width: 100%;
+			height: 100vh;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items:center;
+			line-height: 1.2em;
+		}
+		.inp_pb{
+			width: 8ch;
+		}
+		
+		.row{
+		padding: 0.5em;
+			width: 95vw;
+			max-width: 300px;
+			display: flex;
+			flex-direction: row;
+		}
+		.row label{
+			font-size: 1.3em;
+		}
+		.row input{
+			width: 100%;
+			min-height: 1.5em;
+			font-size: 1.5em;
+			margin-top:0.2em;
+			text-align: center;
+		}
+		.mw50{
+			max-width: 50%;
+		}
+		.btn{
+			height: 3em;
+			cursor: pointer;
+		}
+		
+		.bold{
+			font-weight: bold;
+		}
+	</style>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+
+<body>
+
+<div id = "wrapper">
+
+	
+	
+	<div class="row">
+	<label for="base_probe">Проба основного металла<br/>
+		<input type="number" id="base_probe" name="base_probe" class="inp_pb"/>
+	</label>
+	</div>
+	<div class="row">
+	<label>Желаемая проба<br/>
+		<input type="number" id="result_probe" name="result_probe"  value="585" class="inp_pb"/>
+	</label>
+	</div>
+
+	<div class="row">
+	<label>Проба лигатуры<br/>
+		<input type="number" id="adt_probe" name="adt_probe" class="inp_pb"/>
+	</label>
+	</div>
+	<div class="row">
+		<label for="base_weight">Вес основного металла<br/>
+			<input type="number" id="base_weight" name="base_weight"/>
+		</label>
+	</div>
+	
+	<hr>
+	
+	<div class="row">
+		<label class = "mw50">Вес лигатуры
+			<input class="bold" type="number" id="adt_weight" name="adt_weight" readonly/>
+		</label>
+		<label class = "mw50">Общий вес
+			<input class="bold" type="number" id="result_weight" name="result_weight" readonly/>
+		</label>
+	</div>
+	
+	<hr>
+	<div class="row">
+		<input class ="btn mw50" type="button" id="btn_clear" name="btn_clear" value ="Очистить"></input>
+		<input class ="btn mw50" type="button" id="btn_calc" name="btn_calc" value ="Посчитать"></input>
+	</div>
+</div>
+
+<script>
+
+	
+	let inps = {
+		base_weight: document.querySelector('#base_weight'),
+		base_probe: document.querySelector('#base_probe'),
+		adt_probe: document.querySelector('#adt_probe'),
+		result_probe: document.querySelector('#result_probe'),
+		adt_weight: document.querySelector('#adt_weight'),
+		result_weight: document.querySelector('#result_weight')
+	};
+	
+	['base_weight','base_probe','adt_probe','result_probe'].forEach(inp_tag=>{
+		document.querySelector('#'+inp_tag).addEventListener('input',(ev)=>{
+			inps.adt_weight.value='';
+			inps.result_weight.value='';
+		});
+		document.querySelector('#'+inp_tag).addEventListener('change',(ev)=>{
+			ev.target.blur();
+		});
+	});
+	document.querySelector('#btn_clear').addEventListener('click',(ev)=>{
+		Object.values(inps).forEach(inp=>inp.value='');
+		inps.result_probe.value = '585'
+	});
+	document.querySelector('#btn_calc').addEventListener('click',(ev)=>{
+		let c = parseInt(inps.base_probe.value);
+		let a = parseInt(inps.adt_probe.value);
+		let b = parseFloat(inps.base_weight.value);
+		let d = parseInt(inps.result_probe.value);
+		
+		inps.adt_weight.value = (b*((c-d)/(d-a))).toFixed(2);
+		inps.result_weight.value = (b+b*((c-d)/(d-a))).toFixed(2);
+	});
+</script>
+</body>
+</html>
